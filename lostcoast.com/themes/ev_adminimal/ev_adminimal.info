@@ -1,0 +1,6 @@
+name = EV Adminimal (Custom Child Theme)
+description = Child theme of Adminimal, allowing for customizations to admin area styles
+core = 7.x
+base theme = adminimal
+
+stylesheets[all][]   = css/style-overrides.css

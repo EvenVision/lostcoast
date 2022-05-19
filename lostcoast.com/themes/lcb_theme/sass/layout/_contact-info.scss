@@ -1,0 +1,141 @@
+/* contact-info styles */
+
+.contact-info{
+  position:relative;
+  color:$boulder;
+  padding:59px 0 137px;
+
+  @include media('screen', '<tablet') {
+    padding:20px 0 100px;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-white-3.png) repeat-x 0 0 / 2500px auto;
+    z-index: -1;
+    pointer-events: none;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-white-3-2x.png);
+    }
+  }
+
+  .inner-area{
+    @extend %flexbox;
+    @include justify-content(flex-end);
+    padding:0 0 0 200px;
+
+    @include media('screen', '<widescreen') {
+      padding:0 0 0 100px;
+    }
+
+    @include media('screen', '<tablet') {
+      display:block;
+      padding:0;
+    }
+  }
+
+  .column{
+    width:25%;
+    @include flex-shrink(0);
+    padding:0 15px 0 0;
+
+    @include media('screen', '<desktop') {
+      width:33%;
+    }
+
+    @include media('screen', '<tablet') {
+      width:auto;
+      padding:0;
+
+      &:not(:last-child){
+        margin:0 0 20px;
+      }
+    }
+
+    &:first-child{
+      width:34%;
+
+      @include media('screen', '<desktop') {
+        width:33%;
+      }
+
+      @include media('screen', '<tablet') {
+        width:auto;
+      }
+    }
+  }
+
+  h2{
+    font:23px/1.2 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    color:$blue-chill;
+    text-transform:uppercase;
+    margin:0 0 5px;
+  }
+
+  h3{
+    font:16px/1.2 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    color:$blue-chill;
+    text-transform:uppercase;
+    margin:0 0 5px;
+  }
+
+  address{
+    margin:0;
+  }
+
+  .address-row{
+    display:block;
+  }
+
+  .box{
+    &:not(:last-child){
+      margin:0 0 36px;
+
+      @include media('screen', '<tablet') {
+        margin:0 0 20px;
+      }
+    }
+  }
+
+  .name{
+    a{
+      color:$boulder;
+      text-decoration:none;
+
+      &:hover{
+        color:$black;
+      }
+    }
+  }
+
+  .phone{
+    color:$boulder;
+    text-decoration:none;
+
+    &:hover{
+      color:$black;
+    }
+  }
+
+  .visual{
+    position: absolute;
+    bottom: 38px;
+    left: -61px;
+
+    @include media('screen', '<widescreen') {
+      width: 340px;
+      height: auto;
+      left:-90px;
+    }
+
+    @include media('screen', '<desktop') {
+      display: none;
+    }
+  }
+}

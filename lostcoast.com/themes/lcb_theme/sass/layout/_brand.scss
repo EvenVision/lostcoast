@@ -1,0 +1,237 @@
+/* person styles */
+
+.to-say{
+  position: relative;
+  padding: 62px 0 10px;
+  color: $boulder;
+
+  @include media('screen', '<tablet') {
+    padding: 15px 0 10px;
+  }
+
+  .container {
+    max-width: 960px;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -66px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/img-7.png) repeat-x 0 0 / 2500px auto;
+    z-index: -1;
+    cursor: default;
+    pointer-events: none;
+
+    @include media('screen', '<desktop') {
+      top: -60px;
+    }
+
+    @include media('retina2x') {
+      background-image: url(../images/img-7-2x.png);
+    }
+  }
+}
+
+.two-columns{
+  display: flex;
+  @include justify-content(space-between);
+
+  @include media('screen', '<tablet') {
+    display: block;
+  }
+
+  .column{
+    width: 47%;
+
+    @include media('screen', '<tablet') {
+      width: auto;
+    }
+  }
+}
+
+.desided{
+  position: relative;
+  padding: 53px 0 16px;
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-waves-5.png) repeat-x 0 0 / 2500px auto;
+    z-index: -1;
+    pointer-events: none;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-waves-5-2x.png);
+    }
+  }
+
+  h2{
+    float: right;
+    font:46px/1.2 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    text-transform: uppercase;
+    color: $white;
+    letter-spacing: 1px;
+    margin: 0 163px 0 0;
+
+    @include media('screen', '<desktop') {
+      margin: 0;
+    }
+
+    @include media('screen', '<tablet') {
+      font-size: 30px;
+      float: none;
+      text-align: right;
+    }
+  }
+
+  .line{
+    display: block;
+    @include transform-origin(100% 0);
+
+    &:first-child{
+      font-size: 32px;
+      @include transform(rotate(-7deg));
+      margin: 0 106px -15px 0;
+
+      @include media('screen', '<tablet') {
+        margin: 0;
+        font-size: 20px;
+        text-align: center;
+      }
+    }
+
+    &:nth-child(2){
+      text-align: right;
+      @include transform(rotate(-5deg));
+      font-size: 44px;
+      margin: 0 0 -4px;
+
+      @include media('screen', '<tablet') {
+        margin: 0;
+        font-size: 28px;
+        text-align: center;
+      }
+
+      small{
+        @include inline-block(middle);
+        font-size: 33px;
+        letter-spacing: 2px;
+        margin: 0 0 9px;
+
+        @include media('screen', '<tablet') {
+          font-size: 20px;
+          margin: 0 0 3px;
+        }
+      }
+    }
+
+    &:nth-child(3){
+      @include transform(rotate(-2deg));
+      text-align: right;
+      margin: 0 14px -13px 0;
+
+      @include media('screen', '<tablet') {
+        margin: 0;
+        text-align: center;
+      }
+
+      small{
+        @include inline-block(middle);
+        margin: 0 0 7px;
+        font-size: 26px;
+
+        @include media('screen', '<tablet') {
+          font-size: 16px;
+          margin: 0 0 3px;
+        }
+      }
+    }
+
+    &:nth-child(4){
+      @include transform(rotate(-1deg));
+      text-align: center;
+      margin: 0 0 -11px 100px;
+
+      @include media('screen', '<tablet') {
+        text-align: center;
+        margin: 0;
+      }
+    }
+
+    &:nth-child(5){
+      @include transform(rotate(1deg));
+      text-align: right;
+      margin: 0 -37px 0 0;
+
+      @include media('screen', '<tablet') {
+        margin: 0;
+        text-align: center;
+      }
+    }
+  }
+
+  small{
+    color: $white;
+  }
+}
+
+.make-beer{
+  position: relative;
+  padding: 29px 0 130px;
+  color: $boulder;
+  font-family: 'IntroCondLightAlt', Arial, Helvetica, sans-serif;
+
+  @include media('screen', '<tablet') {
+    padding: 15px 0 100px;
+  }
+
+  .inner-area{
+    float: right;
+    width: 50.5%;
+
+    @include media('screen', '<tablet') {
+      width: auto;
+      float: none;
+    }
+  }
+
+  p{
+    margin: 0 0 22px;
+
+    @include media('screen', '<tablet') {
+      margin: 0 0 15px;
+    }
+  }
+
+  .visual{
+    position: absolute;
+    bottom: -32px;
+    left: 35px;
+
+    @include media('screen', '<widescreen') {
+      width: 400px;
+      height: auto;
+      bottom: 0;
+      left: 10px;
+    }
+
+    @include media('screen', '<desktop') {
+      width: 300px;
+    }
+
+    @include media('screen', '<tablet') {
+      width: 150px;
+      position: static;
+      margin: 0 0 15px;
+      display: none;
+
+    }
+  }
+}

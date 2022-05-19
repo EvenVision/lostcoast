@@ -1,0 +1,47 @@
+.collector{
+
+  position: relative;
+  color: #575757;
+  padding: 40px 0 125px;
+
+  &:after{
+    content: "";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-white-3.png) repeat-x 0 0/2500px auto;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .number-list{
+    list-style-type: decimal;
+    padding-left: 15px;
+    li{
+      margin-bottom: 13px;
+    }
+  }
+
+  .line{
+    margin-bottom: 50px;
+    p{
+      margin: 0px;
+    }
+  }
+
+  h5,h6{
+    color: #109ea7;
+  }
+
+  h5{
+    font: 25px/1.1 'Interstate-BlackCondensed',Arial,Helvetica,sans-serif;
+    margin-top: 0px;
+  }
+
+  h6{
+    font: 17px/1.1 'IntroCondBoldAlt',Arial,Helvetica,sans-serif;
+    margin: 0px;
+  }
+}

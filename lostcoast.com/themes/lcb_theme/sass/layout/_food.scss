@@ -1,0 +1,124 @@
+/* food styles */
+
+.food{
+  position: relative;
+  z-index: 5;
+  padding: 25px 0 225px;
+
+  @include media('screen', '<desktop') {
+    padding: 25px 0 197px;
+  }
+
+  @include media('screen', '<tablet') {
+    padding: 20px 0 152px;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -340px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-food.png) no-repeat center 0 / 3320px 881px;
+    z-index: -1;
+    cursor: default;
+    pointer-events: none;
+
+    @include media('screen', '<tablet') {
+      top: -270px;
+    }
+
+    @include media('screen', '<=phone') {
+      top: -90px;
+      background: url(../images/burger.png) no-repeat center 0/100%;
+    }
+  }
+
+  .text-holder{
+    font-family: 'IntroCondLightAlt', Arial, Helvetica, sans-serif;
+    line-height: 1.4;
+    color: $white;
+    float: right;
+    width: 50%;
+    margin: 0 -11px 0 0;
+
+    @include media('screen', '<desktop') {
+      width: 60%;
+    }
+
+    @include media('screen', '<tablet') {
+      width: auto;
+      float: none;
+      margin: 0;
+    }
+
+    @include media('screen', '<=phone') {
+      .link{
+        display: block;
+        text-align: center;
+      }
+    }
+  }
+
+  .inner-area{
+    padding: 0 145px 0 0;
+
+    @include media('screen', '<desktop') {
+      padding: 0;
+    }
+  }
+
+  h2{
+    font: 72px/.9 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    margin:0 0 29px -23px;
+    color:$white;
+    text-shadow: 3px 6px 1px rgba($black, .6);
+    letter-spacing: 2px;
+
+    @include media('screen', '<desktop') {
+      font-size: 35px;
+      margin: 0 0 20px;
+    }
+
+    @include media('screen', '<=phone') {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .line{
+    display: block;
+    @include transform-origin(0 top);
+
+    &:nth-child(1){
+      @include transform(rotate(1deg));
+    }
+
+    &:nth-child(2){
+      @include transform(rotate(-2deg));
+      margin: 10px 0 0 -30px;
+
+      @include media('screen', '<desktop') {
+        margin: 10px 0 0;
+      }
+    }
+  }
+
+  p{
+    margin: 0 0 21px;
+  }
+
+  a{
+    text-transform: uppercase;
+    font-family: 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    line-height: 1.2;
+    color: $white;
+
+    &:hover{
+      text-decoration: none;
+      opacity: .9;
+    }
+  }
+
+}

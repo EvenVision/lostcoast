@@ -1,0 +1,120 @@
+/* available styles */
+
+.page-node-8 #main{
+  @include media('screen', '>=tablet','<desktop') {
+    @include flex-grow(0);
+  }
+}
+
+.available{
+  position:relative;
+  color:$boulder;
+  padding:14px 0 85px;
+
+  @include media('screen', '<tablet') {
+    padding: 20px 0 100px;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-white-3.png) repeat-x 0 0 / 2500px auto;
+    z-index: -1;
+    pointer-events: none;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-white-3-2x.png);
+    }
+  }
+
+  .inner-area{
+    @extend %flexbox;
+    @include justify-content(space-between);
+    @include flex-wrap(wrap);
+    max-width: 482px;
+    float: right;
+
+    @include media('screen', '<tablet') {
+      display:block;
+      max-width: none;
+      float: none;
+    }
+  }
+
+  .column{
+    width:45%;
+    @include flex-shrink(0);
+    padding:0 15px 0 0;
+
+    @include media('screen', '<tablet') {
+      width:auto;
+      padding:0;
+    }
+
+    &:not(:last-child){
+      margin:0 0 15px;
+    }
+
+    &.wide{
+      width:100%;
+    }
+  }
+
+  p{
+    margin: 0;
+  }
+
+  h2{
+    font:16px/1.2 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    color:$blue-chill;
+    text-transform:uppercase;
+    margin:0 0 8px;
+  }
+
+  address{
+    margin:0;
+  }
+
+  .address-row{
+    display:block;
+  }
+
+  .box{
+    &:not(:last-child){
+      margin:0 0 15px;
+    }
+  }
+
+  .phone{
+    color:$boulder;
+    text-decoration:none;
+
+    &:hover{
+      color:$black;
+    }
+  }
+
+  .visual{
+    position: absolute;
+    bottom: 21px;
+    left: -46px;
+
+    @include media('screen', '<widescreen') {
+      width: 460px;
+      height: auto;
+    }
+
+    @include media('screen', '<desktop') {
+      width: 295px;
+      bottom:46px;
+    }
+
+    @include media('screen', '<tablet') {
+      display: none;
+    }
+  }
+}

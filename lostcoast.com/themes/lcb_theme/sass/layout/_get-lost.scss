@@ -1,0 +1,350 @@
+/* get-lost styles */
+
+.get-lost{
+  position: relative;
+  z-index: 4;
+  padding: 100px 0 225px;
+
+  @include media('screen', '<tablet') {
+    padding: 100px 0;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -45px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-waves2.png) repeat-x 0 0 / auto 100%;
+    z-index: -1;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-waves2-2x.png);
+    }
+  }
+}
+
+.lost-box{
+  margin: -165px 0 0 -49px;
+  float:left;
+
+  @include media('screen', '<widescreen') {
+    margin:-160px 0 0 0;
+  }
+
+  @include media('screen', '<tablet') {
+    float:none;
+    margin: -160px 0 40px;
+  }
+}
+
+.category-visual{
+  position: relative;
+  width: 372px;
+  padding: 366px 32px 78px;
+  @include transform(rotate(2deg));
+  @include transform-origin(0 top);
+  z-index:2;
+
+  @include media('screen', '<desktop') {
+    width: 250px;
+    padding: 200px 21px 20px;
+  }
+
+  @include media('screen', '<tablet') {
+    margin:0 auto;
+  }
+
+  .photo{
+    position: absolute;
+    top: 48px;
+    left: 29px;
+    right: 36px;
+    bottom: 109px;
+    z-index: 1;
+
+    @include media('screen', '<desktop') {
+      top: 24px;
+      left: 21px;
+      right: 20px;
+      bottom: 55px;
+    }
+
+    img{
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .bg-visual{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-visual.png) no-repeat 0 0 / 100% 100%;
+    z-index: 2;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-visual-2x.png);
+    }
+  }
+
+  .caption{
+    display: block;
+    text-align: right;
+    position: relative;
+    z-index: 3;
+    font-size: 14px;
+    margin: 0 8px 0 0;
+    color: $scorpion;
+
+    a{
+      color: currentColor;
+      font-family: 'IntroCondSemiBoldAlt', Arial, Helvetica, sans-serif;
+    }
+  }
+}
+
+.hey{
+  position: absolute;
+  bottom: 100%;
+  left: -201px;
+  margin: 0 0 -86px;
+  @include transform(rotate(-2deg));
+  @include transform-origin(0 top);
+
+  @include media('screen', '<widescreen') {
+    left:-246px;
+  }
+
+  @include media('screen', '<desktop') {
+    width: 300px;
+    left: -100px;
+  }
+
+  @include media('screen', '<tablet') {
+    display:none;
+  }
+
+  img{
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.lost-info{
+  max-width: 350px;
+  position: relative;
+  color: $white;
+  font-family: 'IntroCondLightAlt', Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  margin:-31px 0 0;
+  z-index:1;
+
+  @include media('screen', '<desktop') {
+    max-width: 250px;
+    margin:-15px 0 0;
+  }
+
+  @include media('screen', '<tablet') {
+    max-width: none;
+    margin: 0 0 10px;
+    span.hashtag{
+      display: block;
+      text-align: center;
+    }
+  }
+
+  p{
+    margin: 0 0 21px;
+  }
+
+  h2{
+    font: 46px/1.2 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    margin: 0 0 6px 30px;
+    color: $white;
+    @include transform(rotate(-1deg));
+    @include transform-origin(0 top);
+    letter-spacing: 4px;
+
+    @include media('screen', '<desktop') {
+      font-size: 30px;
+    }
+
+    small{
+      @include inline-block(middle);
+      font-size: 32px;
+      color: currentColor;
+      letter-spacing: 1px;
+      margin:0 -9px 4px 0;
+
+      @include media('screen', '<desktop') {
+        font-size: 20px;
+      }
+    }
+
+    .line{
+      display: block;
+
+      &:first-child{
+        @include transform(rotate(-4deg));
+        @include transform-origin(0 top);
+        margin: 0 0 -23px -34px;
+
+        @include media('screen', '<desktop') {
+          margin: 0 0 -15px -34px;
+        }
+      }
+    }
+  }
+
+  span{
+    text-transform: uppercase;
+    font-family: 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    line-height: 1.2;
+    color: $white;
+
+    &:hover{
+      text-decoration: none;
+      opacity: .9;
+    }
+  }
+}
+
+.meet{
+  position:relative;
+  max-width:400px;
+  float:right;
+  margin:0 68px 0 0;
+  color: $white;
+  font-family: 'IntroCondLightAlt', Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  z-index: 1;
+
+  @include media('screen', '<widescreen') {
+    margin:0 0 0 68px;
+  }
+
+  @include media('screen', '<desktop') {
+    margin:0 68px 0 0;
+    max-width: 325px;
+  }
+
+  @include media('screen', '<tablet') {
+    float:none;
+    width: auto;
+    margin: 0;
+    max-width: none;
+  }
+
+  h2{
+    font: 52px/.9 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    margin:0 0 29px;
+    color:$white;
+
+    @include media('screen', '<tablet') {
+      font-size: 40px;
+
+      @include transform(translateX(100px));
+      width: 300px;
+    }
+
+    small{
+      font-size:26px;
+      color:currentColor;
+      display:block;
+      letter-spacing:1px;
+      margin-bottom: 6px;
+
+      @include media('screen', '<desktop') {
+        text-align: right;
+      }
+
+      @include media('screen', '<tablet') {
+        font-size: 20px;
+        text-align: left;
+        @include transform(translateX(27px));
+      }
+    }
+  }
+
+  .indent{
+    margin-left: 65px;
+    @include media('screen', '<tablet') {
+      margin-left: 15px;
+    }
+  }
+
+  .style1{
+    text-align:right;
+    display:block;
+    @include transform(rotate(-2deg));
+    @include transform-origin(center center);
+    letter-spacing:4px;
+
+    @include media('screen', '<tablet') {
+      text-align: left;
+    }
+
+    @include media('screen', '<=phone') {
+      max-width: 215px;
+    }
+  }
+
+  p{
+    margin: 0 0 21px;
+  }
+
+  a{
+    text-transform: uppercase;
+    font-family: 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    line-height: 1.2;
+    color: $white;
+
+    &:hover{
+      text-decoration: none;
+      opacity: .9;
+    }
+  }
+
+  .visual{
+    position: absolute;
+    top: -92px;
+    left: -216px;
+    z-index: -1;
+    @include transform-origin(0 top);
+
+    @include media('screen', '<widescreen') {
+      left: -200px;
+    }
+
+    @include media('screen', '<desktop') {
+      left: 75%;
+    }
+
+    @include media('screen', '<tablet') {
+      top: auto;
+      bottom: 0;
+      @include transform(scale(0.5) rotate(10deg) translateX(20px));
+      @include transform-origin(0 bottom);
+      margin: 0 0 -80px -90px;
+      left: 0px;
+    }
+  }
+
+  .text-holder{
+    padding: 0 0 0 123px;
+
+    @include media('screen', '<desktop') {
+      padding: 0 0 0 45px;
+    }
+    @include media('screen', '<tablet') {
+      padding: 0;
+      width: 157px;
+      transform: translateX(125px);
+      margin: 0px;
+    }
+  }
+}

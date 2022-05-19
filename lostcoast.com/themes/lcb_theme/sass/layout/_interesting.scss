@@ -1,0 +1,60 @@
+/* interesting styles */
+
+.interesting{
+  position:relative;
+  z-index: 4;
+  padding: 58px 0 80px;
+
+  @include media('screen', '<tablet') {
+    padding: 30px 0 40px;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/bg-waves-3.png) repeat-x 0 0 / 2286px 651px;
+    z-index: -1;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-waves-3-2x.png);
+    }
+  }
+}
+
+.interesting-columns{
+  position:relative;
+  @extend %flexbox;
+  @include justify-content(flex-end);
+  font-family: 'IntroCondLightAlt', Arial, Helvetica, sans-serif;
+  line-height: 1.4;
+  color:$white;
+  padding:0 55px 0 0;
+
+  @include media('screen', '<desktop') {
+    padding: 0;
+  }
+
+  @include media('screen', '<tablet') {
+    @include flex-wrap(wrap);
+  }
+
+  .column{
+    width:35%;
+
+    @include media('screen', '<tablet') {
+      width:100%;
+    }
+
+    &:not(:last-child) {
+      margin:0 30px 0 0;
+
+      @include media('screen', '<tablet') {
+        margin:0 0 20px;
+      }
+    }
+  }
+}

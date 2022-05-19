@@ -1,0 +1,175 @@
+.call-banner{
+  text-align: center;
+
+  .bg-stretch{
+    background-position:center 0;
+  }
+
+  h1{
+    font: 100px/1 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    color: $white;
+    text-transform: uppercase;
+    text-shadow: 4px 7px 0 #0f7275;
+    margin: 0;
+    position: absolute;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+
+    @include media('screen', '<desktop') {
+      position: static;
+      font-size: 70px;
+    }
+
+    @include media('screen', '<tablet') {
+      font-size: 40px;
+      text-shadow: 3px 3px 0 #0f7275;
+    }
+  }
+
+  small{
+    @include inline-block(top);
+    color: currentColor;
+    margin: 22px -8px 0 0;
+
+    @include media('screen', '<desktop') {
+      margin: 15px 0 0;
+    }
+
+    @include media('screen', '<tablet') {
+      margin: 9px 0 0;
+    }
+  }
+
+  .line{
+    display: block;
+    @include transform-origin(center center);
+
+    &:first-child{
+      font: 82px/1 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+      @include transform(rotate(-2deg));
+      letter-spacing: -3px;
+      margin: 0 375px -33px 0;
+
+      @include media('screen', '<desktop') {
+        font-size: 60px;
+        margin: 0 175px -10px 0;
+      }
+
+      @include media('screen', '<tablet') {
+        font-size: 30px;
+        margin: 0;
+        letter-spacing: -1px;
+      }
+    }
+
+    &:nth-child(2){
+      letter-spacing: -2px;
+      margin: 0 0 0 185px;
+
+      @include media('screen', '<tablet') {
+        margin: 0;
+        letter-spacing: -1px;
+      }
+    }
+  }
+}
+
+/* employment styles */
+
+.employment{
+  padding: 83px 0 150px;
+  text-align: center;
+  color: $boulder;
+  position: relative;
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -66px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url(../images/img-7.png) repeat-x 0 0 / 2500px auto;
+    z-index: -1;
+    cursor: default;
+    pointer-events: none;
+
+    @include media('screen', '<desktop') {
+      top: -60px;
+    }
+
+    @include media('retina2x') {
+      background-image: url(../images/img-7-2x.png);
+    }
+  }
+
+  @include media('screen', '<tablet') {
+    padding: 40px 0 100px;
+  }
+
+  .container{
+    @include media('screen', '>=widescreen') {
+      max-width: 600px;
+    }
+  }
+
+  .topic{
+    margin: 0 0 87px;
+
+    @include media('screen', '<tablet') {
+      margin: 0 0 40px;
+    }
+  }
+
+  p{
+    margin: 0;
+  }
+}
+
+.employment-list{
+  margin: 0 0 70px;
+  padding: 0;
+  font: 22px/1.2 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+  text-transform: uppercase;
+  color: $blue-chill;
+  @extend %flexbox;
+  @include justify-content(space-between);
+
+  @include media('screen', '<tablet') {
+    display: block;
+    margin: 0 0 40px;
+  }
+
+  li{
+    width: 40%;
+    @include flex-shrink(0);
+    position: relative;
+    z-index: 1;
+
+    @include media('screen', '<tablet') {
+      width: auto;
+
+      &+li{
+        margin: 80px 0 0;
+      }
+    }
+  }
+
+  a{
+    color: currentColor;
+    text-decoration: none;
+
+    &:hover{
+      opacity: .8;
+    }
+  }
+
+  .visual{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    @include transform(translate(-50%, -50%));
+    z-index: -1;
+  }
+}

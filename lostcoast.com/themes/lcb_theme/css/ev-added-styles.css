@@ -1,0 +1,189 @@
+/**
+ * Table of Contents:
+ * (easily jump around by using crtl-F > section number)
+ *
+ * 0 - Misc Corrections of Prior Dev
+ *
+ * 1 - Events Slideshow
+ *
+ * ----------------------------------------------------------------------------
+**/
+
+#footer {
+	-webkit-font-smoothing: antialiased;
+	background: #565656;
+	-webkit-transform: rotateZ(0deg);
+	        transform: rotateZ(0deg);
+	text-rendering: optimizeLegibility;
+}
+
+/**
+ * 1 - Events Slideshow
+ * ----------------------------------------------------------------------------
+**/
+
+#block-bean-event-slideshow {
+	display: none;
+}
+
+.page-events #block-bean-event-slideshow {
+	display: block;
+}
+
+.events-boxes {
+	padding-bottom: 50px;
+}
+
+#block-bean-event-slideshow > h2,
+.field-name-field-description {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.bean-slideshow .field-name-field-images {
+	padding-top: 60px;
+	margin-bottom: 20px;
+	position: relative;
+	overflow-y: hidden;
+	z-index: 0;
+}
+
+.bean-slideshow .field-name-field-images:before {
+	content: '';
+	background: url(/sites/all/themes/lcb_theme/images/slideshow-top.png) top left;
+	position: absolute;
+	top: -30px;
+	left: 0;
+	right: 0;
+	height: 128px;
+	z-index: 100;
+}
+
+.bean-slideshow .field-slideshow,
+.bean-slideshow .field-slideshow-slide, 
+.bean-slideshow .field-slideshow-slide a, 
+.bean-slideshow .field-slideshow-slide img {
+	width: 100% !important;
+}
+
+#field-slideshow-1-controls {
+	position: absolute;
+	bottom: 100px;
+	left: 50%;
+	-webkit-transform: translateX(-50%);
+	        transform: translateX(-50%);
+	z-index: 100;
+	display: -ms-flexbox;
+	display: flex;
+
+}
+
+#field-slideshow-1-controls a {
+	position: relative;
+	background: #333;
+	color: #fff;
+	height: 60px;
+	width: 60px;
+	border-radius: 100%;
+	display: inline-block;
+	font-size: 0;
+	line-height: 60px;
+    text-align: center;
+    margin: 10px;
+	text-decoration: none !important;
+	-webkit-transition: .3s cubic-bezier(.25,0,0,1);
+	transition: .3s cubic-bezier(.25,0,0,1);
+	-webkit-transform: translateX(0);
+	        transform: translateX(0);
+}
+
+#field-slideshow-1-controls a:hover {
+	background: #fa9e31;
+}
+
+#field-slideshow-1-controls a:before {
+	content: '\2794';
+	font-size: 32px;
+	line-height: 64px;
+	display: block;
+	text-decoration: none !important;
+}
+
+#field-slideshow-1-controls a:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#field-slideshow-1-controls a.prev:before {
+	-webkit-transform: rotateY(180deg);
+	        transform: rotateY(180deg);
+}
+
+#field-slideshow-1-controls a.prev:hover {
+	-webkit-transform: translateX(-5px);
+	        transform: translateX(-5px);
+}
+
+#field-slideshow-1-controls a.next:hover {
+	-webkit-transform: translateX(5px);
+	        transform: translateX(5px);
+}
+
+#field-slideshow-1-controls a.prev:hover:after {
+	right: -10px;
+}
+
+#field-slideshow-1-controls a.next:hover:after {
+	left: -10px;
+}
+
+@media screen and (max-width: 991px) {
+
+	#field-slideshow-1-controls a {
+		height: 45px;
+		width: 45px;
+	}
+
+	#field-slideshow-1-controls a:before {
+		font-size: 24px;
+		line-height: 50px;
+	}
+
+}
+
+@media screen and (max-width: 768px) {
+
+	#field-slideshow-1-controls {
+		bottom: 60px;
+	}
+
+}
+
+@media screen and (max-width: 588px) {
+
+	.bean-slideshow .field-slideshow {
+		width: 600px !important;
+		max-width: 600px;
+		margin-left: calc(50% - 300px);
+	}
+
+}
+
+/* Fix for BEAN module double title */
+.entity-bean > h2 { 
+    display: none;
+}
+
+/* Fix for homepage events section */
+.front .hey {
+	display: none;
+}
+
+/* Fix for Registration Form Popup Not Centered */
+#lcb-register-form {
+	padding: 0px 0px 40px 20px;
+}

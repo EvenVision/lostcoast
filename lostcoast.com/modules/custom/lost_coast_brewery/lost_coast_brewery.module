@@ -1,0 +1,1126 @@
+<?php
+/**
+ * @file
+ * Code for the Lost Coast Brewery feature.
+ */
+
+include_once 'lost_coast_brewery.features.inc';
+
+/**
+ * Implements hook_menu().
+ */
+function lost_coast_brewery_menu() {
+  $items = array();
+
+  $items['home'] = array(
+    'title' => 'Home',
+    'page callback' => 'lcb_home_page',
+    'access callback' => true
+  );
+
+  $items['find-our-beer'] = array(
+    'title' => 'Home',
+    'page callback' => 'lcb_find_beer',
+    'access callback' => true
+  );
+
+  $items['beers'] = array(
+    'title' => 'Home',
+    'page callback' => 'lcb_beers',
+    'access callback' => true
+  );
+
+  $items['admin/content/tours'] = array(
+    'title' => 'Tour Calendar',
+    'page callback' => 'lcb_tour_page',
+    'access arguments' => array('add beer tour items'),
+    'file' => 'lcb_tour.admin.inc'
+  );
+
+  $items['admin/content/tour/add'] = array(
+    'title' => 'Add Tour',
+    'page callback' => 'lcb_add_tour',
+    'access arguments' => array('add beer tour items'),
+    'type' => MENU_CALLBACK
+  );
+
+  $items['admin/content/tour/edit/%entityform'] = array(
+    'title' => 'Add Tour',
+    'page callback' => 'lcb_edit_tour',
+    'page arguments' => array(4),
+    'access arguments' => array('edit beer tour items'),
+    'type' => MENU_CALLBACK
+  );
+
+  $items['admin/content/tour/delete/%entityform'] = array(
+    'title' => 'Add Tour',
+    'page callback' => 'lcb_delete_tour',
+    'page arguments' => array(4),
+    'access arguments' => array('delete beer tour items'),
+    'type' => MENU_CALLBACK
+  );
+
+  return $items;
+}
+
+function lcb_add_tour(){
+  $start = $_POST['start'];
+  $end = $_POST['end'];
+  $entityform = entity_create('entityform', array(
+    'type' => "beer_tour",
+    'created' => time(),
+    'changed' => time(),
+    'language' => LANGUAGE_NONE,
+    'uid' => 1
+  ));
+  // We simplify our lifes using Entity API.
+  $wrapper = entity_metadata_wrapper('entityform', $entityform);
+  // And set the fields.
+  $wrapper->field_tour_date->set(array(
+    'value' => $start,
+    'value2' => $end
+  ));
+  $wrapper->save();
+
+  print json_encode(array(
+    'start' => date('Y-m-d\TH:i:s',strtotime($start)),
+    'end' => date('Y-m-d\TH:i:s',strtotime($end)),
+    'id' => $entityform->entityform_id,
+    'title' => 'Tour',
+  ));
+
+  $messages = drupal_get_messages();
+  exit;
+}
+
+function lcb_delete_tour($entityform) {
+  entityform_delete($entityform);
+
+  $messages = drupal_get_messages();
+  exit;
+}
+
+function lcb_edit_tour($entityform){
+  $start = $_POST['start'];
+  $end = $_POST['end'];
+
+  // We simplify our lifes using Entity API.
+  $wrapper = entity_metadata_wrapper('entityform', $entityform);
+  // And set the fields.
+  $wrapper->field_tour_date->set(array(
+    'value' => $start,
+    'value2' => $end
+  ));
+  $wrapper->save();
+
+  print json_encode(_tour_item($entityform));
+
+  $messages = drupal_get_messages();
+  exit;
+}
+
+function _tour_item($entityform){
+  // We simplify our lifes using Entity API.
+  $wrapper = entity_metadata_wrapper('entityform', $entityform);
+
+  $start = $wrapper->field_tour_date->value()['value'];
+  $end = $wrapper->field_tour_date->value()['value2'];
+
+  $entity_type = 'entityform';
+  $entity_id = $entityform->entityform_id;
+  $settings = registration_entity_settings($entity_type, $entity_id);
+  $count = '';
+  if($settings['capacity'] != 0){
+    $capacity = $settings['capacity'];
+    $spots = registration_event_count($entity_type, $entity_id);
+    $count = " ({$spots} / {$capacity})";
+  }
+
+  $markup = "<p>Tour Date: " .
+    date('m/d/Y h:ia', strtotime($wrapper->field_tour_date->value()['value'])) ."</p>".
+    l('View Registrations '.$count, 'admin/content/beer-tours/'.$entityform->entityform_id.'/registrations');
+
+  $data = array(
+    'start' => date('Y-m-d\TH:i:s',strtotime($start)),
+    'end' => date('Y-m-d\TH:i:s',strtotime($end)),
+    'id' => $entityform->entityform_id,
+    'markup' => $markup,
+    'title' => 'Tour '.$count,
+  );
+
+  return $data;
+}
+
+/**
+ * Implements hook_permission().
+ */
+function lost_coast_brewery_permission() {
+  return array(
+    'add beer tour items' => array(
+      'title' => 'Add Beer Tour Registration Events'
+    ),
+    'edit beer tour items' => array(
+      'title' => 'Edit existing Beer Tour Registration Events'
+    ),
+    'delete beer tour items' => array(
+      'title' => 'Delete Beer Tour Registrations'
+    )
+  );
+}
+
+/**
+ * Implements hook_menu_alter().
+ */
+function lost_coast_brewery_menu_alter(&$items) {
+  $items['admin/content/files']['title'] = 'File Manager';
+  $items['user/password']['access callback'] = FALSE;
+}
+
+function lcb_find_beer(){
+  return theme('find_beer');
+}
+
+function lcb_home_page(){
+  return theme('home_page');
+}
+
+function lcb_beers(){
+  return theme('beer_page');
+}
+
+/**
+ * Implements hook_theme().
+ */
+function lost_coast_brewery_theme($existing, $type, $theme, $path) {
+  return array(
+    'home_page' => array(
+      'template' => 'templates/home-page'
+    ),
+    'find_beer' => array(
+      'template' => 'templates/find-beer'
+    ),
+    'beer_page' => array(
+      'template' => 'templates/beer-page'
+    ),
+    'modal' => array(
+      'template' => 'templates/modal',
+      'arguments' => array('form' => NULL),
+    ),
+    'brewery_tour_register' => array(
+      'render element' => 'form',
+      'template' => 'templates/brewery-tour-register',
+      'arguments' => array('form' => NULL),
+    )
+  );
+}
+
+/**
+ * Implements hook_admin_paths_alter().
+ */
+function lost_coast_brewery_admin_paths_alter(&$paths) {
+  $paths['eform/*'] = true;
+  $paths['entityform/*'] = true;
+  $paths['registration/*'] = true;
+}
+
+/**
+ * Return tour dates within the next 2 months
+ */
+function _tour_dates(){
+  //$dates = &drupal_static(__FUNCTION__);
+  //if (!isset($dates)) {
+    $query = new EntityFieldQuery();
+    $values = array();
+    $values[] = date('Y-m-d');
+    $values[] = date('Y-m-d', strtotime('next thursday +2 months'));
+    $query->entityCondition('entity_type', 'entityform')
+      ->entityCondition('bundle', 'beer_tour')
+      ->fieldCondition('field_tour_date', 'value', $values, 'BETWEEN')
+      ->fieldOrderBy('field_tour_date', 'value', 'ASC');
+    $dates = array();
+    $results = $query->execute();
+    if (isset($results['entityform'])) {
+      $items = array_keys($results['entityform']);
+      $entities = entityform_load_multiple($items);
+      foreach ($entities AS $entity) {
+        $wrapper = entity_metadata_wrapper('entityform', $entity);
+        $eid = $wrapper->entityform_id->value();
+        $date = $wrapper->field_tour_date->value()['value'];
+        $label = date('M d, Y', strtotime($date));
+        $time = date('g A', strtotime($date));
+
+        if(!isset($dates[$label])){
+          $dates[$label] = array();
+        }
+        $dates[$label][$eid] = $time;
+      }
+    }
+  //}
+
+  return $dates;
+}
+
+function lcb_register_form($form,&$form_state){
+  $form = array();
+
+  $dates = _tour_dates();
+  if(sizeof($dates) == 0):
+    $form['waiver'] = array(
+      '#type' => 'markup',
+      '#markup' => '
+        <div class="text-holder">
+        <p>Tours are Friday, Saturday and Sunday at 4pm.</p>
+        <p>Tours are limited to 15 people.</p>
+        <p>Please call 707-267-9651</p>
+        <p>Mon. - Fri. to schedule a tour.</p>
+        <p>Thank you.</p>
+        </div>'
+    );
+  else:
+    $dates_list = array_keys($dates);
+    $dates_list = drupal_map_assoc($dates_list);
+    $default_values = array_keys($dates_list);
+    $default = $default_values[0];
+
+    $form['date'] = array(
+      '#type' => 'select',
+      '#options' => $dates_list,
+      '#title' => 'Date',
+      '#required' => true,
+      '#ajax' => array(
+        'callback' => 'register_tour_times',
+        'progress' => array('type' => 'none'),
+      ),
+      '#default_value' => $default
+    );
+
+    $times = array();
+
+    if(isset($form_state['values']['date'])){
+      $date = $form_state['values']['date'];
+      $times = $dates[$date];
+      $default_values = array_keys($times);
+      $default = $default_values[0];
+    }else{
+      $times = $dates[$default];
+    }
+    $form['time'] = array(
+      '#type' => 'select',
+      '#options' => $times,
+      '#title' => 'Time',
+      '#required' => true,
+      '#prefix' => '<div id="time-wrapper">',
+      '#suffix' => '</div>',
+      '#default_value' => $default
+    );
+
+    $form['guests'] = array(
+      '#type' => 'select',
+      '#options' => drupal_map_assoc(range(1,10)),
+      '#title' => 'Guests',
+      '#required' => true,
+      '#default_value' => 1
+    );
+
+    $form['name'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Name',
+      '#title_display' => 'invisible',
+      '#attributes' => array('placeholder' => 'NAME'),
+      '#required' => true
+    );
+
+    $form['email'] = array(
+      '#type' => 'textfield',
+      '#title' => 'Email',
+      '#title_display' => 'invisible',
+      '#attributes' => array('placeholder' => 'EMAIL'),
+      '#required' => true
+    );
+
+    $form['submit'] = array(
+      '#type' => 'button',
+      '#value' => 'Register',
+      '#attributes' => array('type' => 'submit'),
+      '#ajax' => array(
+        'callback' => 'lcb_register_form_ajax_submit',
+        'wrapper' => 'form-contents',
+        'method' => 'replace',
+        'effect' => 'fade',
+      ),
+    );
+
+    $form['#theme_wrappers'] = array('brewery_tour_register','form');
+    $form['#attributes'] = array('class'=>'register-form');
+
+    $form['#attached']['js'] = array
+    (
+      array
+      (
+        'type'  => 'file',
+        'data' => drupal_get_path('module', 'lost_coast_brewery') . '/js/ajax_fixer.js',
+      ),
+    );
+  endif;
+
+  return $form;
+}
+
+function register_tour_times($form, $form_state){
+  //return $form['time'];
+
+  $commands = array();
+  $commands[] = ajax_command_html('#time-wrapper', render($form['time']));
+  $commands[] = array
+  (
+    'command' => 'afterAjaxCallback'
+  );
+  return array('#type' => 'ajax', '#commands' => $commands);
+}
+
+/**
+ * Ajax callback function.
+ */
+function lcb_register_form_ajax_submit($form, $form_state) {
+  $values = $form_state['values'];
+  $registration = entity_create('registration', array(
+    'entity_type' => 'entityform',
+    'entity_id' => $values['time'],
+    'count' => $values['guests'],
+    'type' => 'beer_tour',
+    'anon_mail' => $values['email']
+  ));
+  $wrapper = entity_metadata_wrapper('registration', $registration);
+  $name = $values['name'];
+  $wrapper->field_register_name->set($name);
+  entity_save('registration', $registration);
+
+  $element = array(
+    '#type' => 'markup',
+    '#markup' => '
+      <div class="text-holder">
+      <h3>We’ll see you soon!</h3>
+      <p>Please check in 5-10 minutes early. <br>Tour lasts 30-40 minutes. <br>Must be 21 and older for all tastings. (ID required)</p>
+      </div>'
+  );
+  return $element;
+}
+
+
+/**
+ * Implements hook_menu_local_task_alter().
+ */
+function lost_coast_brewery_menu_local_tasks_alter(&$data, $router_item, $root_path) {
+  if ($root_path == 'admin/content/distributors') {
+    $item = menu_get_item('eform/submit/distributor');
+    if ($item ['access']) {
+      $item['title'] = 'Add Distributor';
+      $data ['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+
+  if ($root_path == 'admin/content/beer-tours') {
+    $item = menu_get_item('eform/submit/beer-tour');
+    if ($item ['access']) {
+      $item['title'] = 'Add Beer Tour';
+      $data ['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+
+  if ($root_path == 'admin/content/beers') {
+    $item = menu_get_item('node/add/beer');
+    if ($item ['access']) {
+      $item['title'] = 'Add Beer';
+      $data ['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+
+  if ($root_path == 'admin/content/header-images') {
+    $item = menu_get_item('eform/submit/header-images');
+    if ($item ['access']) {
+      $item['title'] = 'Add Header Image';
+      $data ['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+
+  if ($root_path == 'admin/content/beer-tours/%/registrations') {
+    $item = menu_get_item('admin/content/beer-tours');
+    if ($item ['access']) {
+      $item['title'] = 'Back to Beer Tours';
+      $data ['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+
+    $item = menu_get_item('admin/content/tours');
+    if ($item ['access']) {
+      $item['title'] = 'Back to Tour Calendar';
+      $data ['actions']['output'][] = array(
+        '#theme' => 'menu_local_action',
+        '#link' => $item,
+      );
+    }
+  }
+}
+
+/**
+ * Implements hook_admin_menu_output_build().
+ */
+function lost_coast_brewery_admin_menu_output_build(&$content){
+  $content['menu']['admin/content']['admin/content/distributors']['eform/submit/distributor'] = array(
+    '#title' => 'Add Distributor',
+    '#href' => 'eform/submit/distributor',
+    '#options' => array(),
+    '#weight' => 0
+  );
+  $content['menu']['admin/content']['admin/content/beer-tours']['eform/submit/beer-tour'] = array(
+    '#title' => 'Add Beer Tour',
+    '#href' => 'eform/submit/beer-tour',
+    '#options' => array(),
+    '#weight' => 0
+  );
+  $content['menu']['admin/content']['admin/content/beers']['node/add/beer'] = array(
+    '#title' => 'Add Beer',
+    '#href' => 'node/add/beer',
+    '#options' => array(),
+    '#weight' => 0
+  );
+  $content['menu']['admin/content']['admin/content/header-images']['eform/submit/header-images'] = array(
+    '#title' => 'Add Header Image',
+    '#href' => 'eform/submit/header-images',
+    '#options' => array(),
+    '#weight' => 0
+  );
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function lost_coast_brewery_block_info() {
+  $blocks = array();
+
+  $blocks['mission_statement'] = array(
+    'info' => 'Mission Statement',
+  );
+
+  $blocks['address'] = array(
+    'info' => 'Address',
+  );
+
+  $blocks['restaurant'] = array(
+    'info' => 'Restaurant'
+  );
+
+  $blocks['picture_spotlight'] = array(
+    'info' => 'Picture Spotlight'
+  );
+
+  $blocks['spotlighted_beer'] = array(
+    'info' => 'Spotlighted Beer'
+  );
+
+  $blocks['beer_tour'] = array(
+    'info' => 'Beer Tour'
+  );
+
+  $blocks['front_beers'] = array(
+    'info' => 'Front Page Beers'
+  );
+
+  $blocks['beer_header'] = array(
+    'info' => 'Beer Page Header'
+  );
+
+  return $blocks;
+}
+
+function lcb_block_defaults($delta){
+  $data = array();
+
+  switch($delta){
+    case 'mission_statement':
+      $data['format'] = 'full_html';
+      $data['value'] = '<strong>LOST COAST BREWERY</strong> is an award-winning brewery in Eureka, California, USA, which produces year-round and seasonal products based on the owner\'s experience and research on English beers.';
+      break;
+
+    case 'address':
+      $data['street'] = '1600 Sunset Dr.';
+      $data['city'] = 'Eureka';
+      $data['province'] = 'California';
+      $data['postal_code'] = '95503';
+      $data['phone'] = '(707) 445-4484';
+      break;
+
+    case 'restaurant':
+      $data['line1'] = 'FOOD AS GOOD';
+      $data['line2'] = 'AS THE BEER.';
+      $data['body'] = array(
+        'value' => '<p>Sometimes you gotta balance out the beer with a good burger. Or some killer wings. Or some tasty chicken lips. Or a...well, you get the point. When hunger strikes, we’ve got you covered (and then some).</p>
+<a href="/restaurant">VISIT THE RESTAURANT</a>',
+        'format' => 'full_html'
+      );
+      break;
+
+    case 'picture_spotlight':
+      $data['photo'] = NULL;
+      $data['caption'] = 'This weeks photo comes from @lostcoast';
+      $data['line1'] = 'BABY,';
+      $data['line2'] = 'YOU\'RE A';
+      $data['line3'] = 'STAR!';
+      $data['body'] = array(
+        'value' => '<p>Lost Coast brew in one hand, camera in the other. What you do next is entirely up to you. Just make sure to use the hashtag #getlost for a chance to be featured here!</p>
+<span>use hashtag #getlost</span>',
+        'format' => 'full_html'
+      );
+      break;
+
+    case 'spotlighted_beer':
+      $data['photo'] = NULL;
+      $data['line1'] = 'MEET YOUR NEW';
+      $data['line2'] = 'FAVORITE BEER:';
+      $data['beer_name'] = 'WATERMELON WHEAT';
+      $data['body'] = array(
+        'value' => '<p>The perfect replacement for a real watermelon at your summer barbecue, our Watermelon Wheat is a refreshing ale – light, crisp, and budding with exemplary aromatics.</p>
+<a href="/beers">More Info</a>',
+        'format' => 'full_html'
+      );
+      break;
+
+    case 'beer_tour':
+      $data['line1'] = 'BREWERY TOURS';
+      $data['line2'] = 'MORE INFO';
+      $data['link'] = '/brewery#tour';
+      break;
+
+    case 'front_beers':
+      $data['line1'] = 'EXPLORE';
+      $data['line2'] = 'OUR';
+      $data['line3'] = 'BEERS.';
+      $data['body'] = array(
+        'value' => '<p>One word to describe our beers: AWESOME. Need more than that? Click through to learn more about each of our masterpieces.</p>
+<a href="/beers">EXPLORE OUR BEERS</a>',
+        'format' => 'full_html'
+      );
+      $data['beer1'] = 24;
+      $data['beer2'] = 21;
+      $data['beer3'] = 20;
+      $data['beer4'] = 4;
+      break;
+
+    case 'beer_header':
+      $data['banner'] = NULL;
+      $data['line1'] = 'GREAT WHITE:';
+      $data['line2'] = 'WHERE IT ALL BEGAN.';
+      $data['body'] = array(
+        'value' => '<p>Open wide for the beer that started it all. The Great White is the original gangsta, and it remains one of our very favorites to this day. Crisp and refreshing, it’s everything you could ever want from a Belgian-style white.</p>',
+        'format' => 'full_html'
+      );
+      break;
+  }
+
+  return $data;
+}
+
+/**
+ * Implements hook_block_configure().
+ */
+function lost_coast_brewery_block_configure($delta = '') {
+  $form = array();
+  switch($delta){
+    case 'mission_statement':
+      $statement = variable_get('lcb_mission_statement', lcb_block_defaults($delta));
+      $form['statement'] = array(
+        '#type' => 'text_format',
+        '#title' => t('Mission Statement'),
+        '#default_value' => $statement['value'],
+        '#format' => $statement['format'] //the format used for editor.
+      );
+      break;
+
+    case 'address':
+      $location = variable_get('lcb_address', lcb_block_defaults($delta));
+      $location_settings = array();
+      location_normalize_settings($location_settings);
+      $collect = array('street','city','province','postal_code','phone');
+      foreach($location_settings['form']['fields'] AS $k => &$v){
+        if(in_array($k, $collect)){
+          $v['collect'] = 1;
+          $v['weight'] = array_search($k, $collect);
+          $v['default'] = $location[$k];
+        }else if(isset($v['collect'])){
+          $v['collect'] = 0;
+        }
+      }
+
+      $form['location'] = array(
+        '#title' => 'Address',
+        '#location_settings' => $location_settings,
+        '#type' => 'location_element',
+        '#required' => true,
+      );
+      break;
+
+    case 'restaurant':
+      $text = variable_get('lcb_restaurant', lcb_block_defaults($delta));
+
+      $form['line1'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 1',
+        '#description' => 'Line 1 of text header',
+        '#default_value' => $text['line1'],
+        '#required' => true
+      );
+
+      $form['line2'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 2',
+        '#description' => 'Line 2 of text header',
+        '#default_value' => $text['line2'],
+      );
+
+      $form['body'] = array(
+        '#type' => 'text_format',
+        '#title' => t('Body Statement'),
+        '#default_value' => $text['body']['value'],
+        '#format' => $text['body']['format'] //the format used for editor.
+      );
+
+      break;
+
+    case 'picture_spotlight':
+      $text = variable_get('lcb_picture_spotlight', lcb_block_defaults($delta));
+
+      $form['photo'] = array(
+        '#title' => 'Picture',
+        '#type' => 'managed_file',
+        '#description' => 'File used on homepage to spotlight a photo.',
+        '#default_value' => $text['photo'],
+        '#upload_location' => 'public://',
+      );
+
+      $form['caption'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Photo Caption',
+        '#default_value' => $text['caption'],
+        '#required' => true
+      );
+
+      $form['line1'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 1',
+        '#description' => 'Line 1 of text header',
+        '#default_value' => $text['line1'],
+        '#required' => true
+      );
+
+      $form['line2'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 2',
+        '#description' => 'Line 2 of text header',
+        '#default_value' => $text['line2'],
+      );
+
+      $form['line3'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 3',
+        '#description' => 'Line 3 of text header',
+        '#default_value' => $text['line3'],
+      );
+
+      $form['body'] = array(
+        '#type' => 'text_format',
+        '#title' => t('Body Statement'),
+        '#default_value' => $text['body']['value'],
+        '#format' => $text['body']['format'] //the format used for editor.
+      );
+      break;
+
+    case 'spotlighted_beer':
+      $text = variable_get('lcb_spotlighted_beer', lcb_block_defaults($delta));
+
+      $form['photo'] = array(
+        '#title' => 'Picture',
+        '#type' => 'managed_file',
+        '#description' => 'File used on homepage to spotlight a beer.',
+        '#default_value' => $text['photo'],
+        '#upload_location' => 'public://',
+      );
+
+      $form['line1'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 1',
+        '#description' => 'Line 1 of text header',
+        '#default_value' => $text['line1'],
+        '#required' => true
+      );
+
+      $form['line2'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 2',
+        '#description' => 'Line 2 of text header',
+        '#default_value' => $text['line2'],
+      );
+
+      $form['beer_name'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Beer Name',
+        '#description' => 'Name of Beer',
+        '#default_value' => $text['beer_name'],
+        '#required' => true
+      );
+
+      $form['body'] = array(
+        '#type' => 'text_format',
+        '#title' => t('Body Statement'),
+        '#default_value' => $text['body']['value'],
+        '#format' => $text['body']['format'] //the format used for editor.
+      );
+      break;
+
+    case 'beer_tour':
+      $text = variable_get('lcb_beer_tour', lcb_block_defaults($delta));
+
+      $form['line1'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Line 1',
+        '#description' => 'Located on top part of widget',
+        '#default_value' => $text['line1'],
+        '#required' => true
+      );
+
+      $form['line2'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 2',
+        '#description' => 'Line 2 of text header',
+        '#default_value' => $text['line2'],
+        '#required' => true
+      );
+
+      $form['link'] = array(
+        '#type' => 'textfield',
+        '#title' => 'URL',
+        '#description' => 'URL to go to when widget clicked',
+        '#default_value' => $text['link'],
+        '#required' => true
+      );
+
+      break;
+
+    case 'front_beers':
+      $text = variable_get('lcb_front_beers', lcb_block_defaults($delta));
+
+      $form['line1'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Line 1',
+        '#description' => 'Located on top part of widget',
+        '#default_value' => $text['line1'],
+        '#required' => true
+      );
+
+      $form['line2'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 2',
+        '#description' => 'Line 1 of text header',
+        '#default_value' => $text['line2'],
+        '#required' => true
+      );
+
+      $form['line3'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 3',
+        '#description' => 'Line 3 of text header',
+        '#default_value' => $text['line3'],
+        '#required' => true
+      );
+
+      $form['body'] = array(
+        '#type' => 'text_format',
+        '#title' => t('Body Statement'),
+        '#default_value' => $text['body']['value'],
+        '#format' => $text['body']['format'] //the format used for editor.
+      );
+
+
+      for($x = 1; $x <= 4; $x++) {
+        $form['beer'.$x] = array(
+          '#type' => 'entityreference',
+          '#title' => t('Beer '.$x),
+          '#era_entity_type' => 'node',
+          '#era_bundles' => array('beer'),
+          '#default_value' => $text['beer'.$x]
+        );
+      }
+
+      break;
+
+    case 'beer_header':
+      $text = variable_get('lcb_beer_header', lcb_block_defaults($delta));
+
+      $form['banner'] = array(
+        '#title' => 'Banner',
+        '#type' => 'managed_file',
+        '#description' => 'File used on homepage to spotlight a beer.',
+        '#default_value' => $text['photo'],
+        '#upload_location' => 'public://',
+      );
+
+      $form['line1'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 1',
+        '#description' => 'Line 1 of text header',
+        '#default_value' => $text['line1'],
+        '#required' => true
+      );
+
+      $form['line2'] = array(
+        '#type' => 'textfield',
+        '#title' => 'Header Line 2',
+        '#description' => 'Line 2 of text header',
+        '#default_value' => $text['line2'],
+      );
+
+      $form['body'] = array(
+        '#type' => 'text_format',
+        '#title' => t('Body Statement'),
+        '#default_value' => $text['body']['value'],
+        '#format' => $text['body']['format'] //the format used for editor.
+      );
+
+      break;
+  }
+  return $form;
+}
+
+/**
+ * Implements hook_block_save().
+ */
+function lost_coast_brewery_block_save($delta = '', $edit = array()) {
+  $data = $edit;
+  switch($delta){
+    case 'mission_statement':
+      $data = $edit['statement'];
+      break;
+    case 'address':
+      $data = $edit['location'];
+      break;
+    case 'picture_spotlight':
+    case 'spotlighted_beer':
+      $path = "public://theme";
+      file_prepare_directory($path, FILE_CREATE_DIRECTORY);
+      $file = file_load($edit['photo']);
+      if ($file) {
+        $file->status = FILE_STATUS_PERMANENT;
+        file_save($file);
+        file_usage_add($file, "lcb_theme", "theme", $file->fid);
+      }
+      break;
+    case 'front_beers':
+      $data['beer1'] = $data['beer1']['entity_id'];
+      $data['beer2'] = $data['beer2']['entity_id'];
+      $data['beer3'] = $data['beer3']['entity_id'];
+      $data['beer4'] = $data['beer4']['entity_id'];
+      break;
+    case 'beer_header':
+      $path = "public://theme";
+      file_prepare_directory($path, FILE_CREATE_DIRECTORY);
+      $file = file_load($edit['banner']);
+      if ($file) {
+        $file->status = FILE_STATUS_PERMANENT;
+        file_save($file);
+        file_usage_add($file, "lcb_theme", "theme", $file->fid);
+      }
+      break;
+  }
+  variable_set('lcb_'.$delta, $data);
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function lost_coast_brewery_block_view($delta = '') {
+  $block = array();
+  switch($delta){
+    case 'mission_statement':
+      $statement = variable_get('lcb_mission_statement', lcb_block_defaults($delta));
+      $block['content'] = check_markup($statement['value'], $statement['format']);
+      break;
+
+    case 'address':
+      $location = variable_get('lcb_address', lcb_block_defaults($delta));
+      $location['phone_strip'] = preg_replace("/[^0-9]/","",$location['phone']);
+      $block['content'] = '
+        <address>
+          <a href="tel:'.$location['phone_strip'].'" class="phone">'.$location['phone'].'</a>
+          <span class="line">'.$location['street'].'</span>
+          <span class="line">'.$location['city'].', '.$location['province'].' '.$location['postal_code'].'</span>
+        </address>
+        ';
+      break;
+
+    case 'restaurant':
+      $text = variable_get('lcb_restaurant', lcb_block_defaults($delta));
+      $block['content'] = '
+      <h2>
+        <span class="line">' . $text['line1'] . '</span>
+        <span class="line">' . $text['line2'] . '</span>
+      </h2>
+      <div class="inner-area">' . check_markup($text['body']['value'], $text['body']['format']) . '</div>';
+      break;
+
+    case 'picture_spotlight':
+      $text = variable_get('lcb_picture_spotlight', lcb_block_defaults($delta));
+      if($text['photo'] == NULL){
+        $text['photo'] = '/sites/default/files/images/img-10.jpg';
+      }else{
+        $fid = $text['photo'];
+        $imgpath = file_load($fid)->uri;
+        $text['photo'] = file_create_url($imgpath);
+      }
+      $block['content'] = '
+<div class="category-visual">
+  <div class="hey">
+    <img src="/sites/default/files/images/img-11.png" srcset="/sites/default/files/images/img-11-2x.png 2x" alt="Image Description" width="504" height="508">
+  </div>
+  <div class="photo">
+    <div class="bg-stretch">
+      <span data-srcset="' . $text['photo'] . '"></span>
+    </div>
+  </div>
+  <span class="caption">' . $text['caption'] . '</span>
+  <div class="bg-visual"></div>
+</div>
+<div class="lost-info">
+  <h2>
+    <span class="line">' . $text['line1'] . '</span>
+    <span class="line"><small>' . $text['line2'] . '</small> ' . $text['line3'] . '</span>
+  </h2>
+  ' . check_markup($text['body']['value'], $text['body']['format']) . '
+</div>';
+      break;
+
+    case 'spotlighted_beer':
+      $text = variable_get('lcb_spotlighted_beer', lcb_block_defaults($delta));
+      if($text['photo'] == NULL){
+        $text['photo'] = '/sites/default/files/images/img-12.png';
+      }else{
+        $fid = $text['photo'];
+        $imgpath = file_load($fid)->uri;
+        $text['photo'] = file_create_url($imgpath);
+      }
+
+      $block['content'] = '
+        <img class="visual" src="' . $text['photo'] . '" alt="' . $text['beer_name'] . '" width="376" height="835">
+        <h2>
+          <small>' . $text['line1'] . '</small>
+          <small class="indent">' . $text['line2'] . '</small>
+          <span class="style1">' . $text['beer_name'] . '</span>
+        </h2>
+        <div class="text-holder">' . check_markup($text['body']['value'], $text['body']['format']) . '</div>';
+      break;
+
+    case 'beer_tour':
+      $text = variable_get('lcb_beer_tour', lcb_block_defaults($delta));
+
+      $url = $text['link'];
+
+      $block['content'] = '
+      <a href="' . $url . '">
+        <h2>' . $text['line1'] . '</h2>
+        <small>' . $text['line2'] . '</small>
+        <img class="visual" src="/sites/default/files/images/img-13.png" srcset="/sites/default/files/images/img-13-2x.png 2x" alt="Brewery Tours - More Info" width="265" height="173">
+      </a>';
+      break;
+
+    case 'front_beers':
+      $text = variable_get('lcb_front_beers', lcb_block_defaults($delta));
+
+      $nids = array(
+        $text['beer1'],
+        $text['beer2'],
+        $text['beer3'],
+        $text['beer4']
+      );
+      $nodes = node_load_multiple($nids);
+      $data = array();
+      foreach($nodes AS $nid => $node){
+        $wrapper = entity_metadata_wrapper('node',$node);
+        $img = $wrapper->field_front_page_image->value();
+
+        $data[$nid] = array();
+        $data[$nid]['image'] = file_create_url($img['uri']);
+        $data[$nid]['title'] = $node->title;
+        $data[$nid]['link'] = '/beers#' . str_ireplace(' ','-',$node->title);
+      }
+
+      $block['content'] = '
+      <div class="text-holder">
+      <h2>
+        <span class="line">'.$text['line1'].'</span>
+        <span class="line"><small>'.$text['line2'].'</small>'.$text['line3'].'</span>
+      </h2>
+      ' . check_markup($text['body']['value'], $text['body']['format']) . '
+    </div>
+    <ul class="beers-list list-unstyled">
+      <li style="bottom:-50px;"><a href="' . $data[$text['beer1']]['link'] . '"><img class="visual" src="' . $data[$text['beer1']]['image'] . '" alt="' . $data[$text['beer1']]['title'] . '" width="177" height="498"></a></li>
+      <li style="bottom:-5px;"><a href="' . $data[$text['beer2']]['link'] . '"><img class="visual" src="' . $data[$text['beer2']]['image'] . '" alt="' . $data[$text['beer2']]['title'] . '" width="172" height="475"></a></li>
+      <li style="bottom:-76px;"><a href="' . $data[$text['beer3']]['link'] . '"><img class="visual" src="' . $data[$text['beer3']]['image'] . '" alt="' . $data[$text['beer3']]['title'] . '" width="216" height="528"></a></li>
+      <li style="bottom:-29px;"><a href="' . $data[$text['beer4']]['link'] . '"><img class="visual" src="' . $data[$text['beer4']]['image'] . '" alt="' . $data[$text['beer4']]['title'] . '" width="195" height="502"></a></li>
+    </ul>
+      ';
+      break;
+
+    case 'beer_header':
+      $text = variable_get('lcb_beer_header', lcb_block_defaults($delta));
+      if($text['banner'] == NULL){
+        $text['banner'] = '/sites/default/files/images/img-29-2x.jpg';
+      }else{
+        $fid = $text['banner'];
+        $imgpath = file_load($fid)->uri;
+        $text['banner'] = file_create_url($imgpath);
+      }
+      $block['content'] = '
+<!-- banner section -->
+<div class="banner beer">
+  <div class="container">
+    <h1>
+      <span class="line">'.$text['line1'].'</span>
+      <small class="line">'.$text['line2'].'</small>
+    </h1>
+    <div class="text-holder">' . check_markup($text['body']['value'], $text['body']['format']) . '</div>
+    <div class="bg-stretch">
+      <span data-srcset="' . $text['banner'] . '"></span>
+    </div>
+  </div>
+</div>';
+      break;
+  }
+
+  if(isset($block['content'])){
+    $block['subject'] = NULL;
+  }
+
+  return $block;
+}
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function lost_coast_brewery_form_block_admin_configure_alter(&$form, &$form_state) {
+  $form['settings']['title']['#access'] = FALSE;
+  $form['regions']['#access'] = FALSE;
+  $form['visibility']['#access'] = FALSE;
+  $form['visibility_title']['#access'] = FALSE;
+}

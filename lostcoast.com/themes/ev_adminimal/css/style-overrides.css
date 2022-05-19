@@ -1,0 +1,142 @@
+/**
+ * Table of Contents:
+ * (easily jump around by using crtl-F > section number)
+ *
+ * 1 - Analytics Dashboard
+ * 2 - Field UI
+ *
+ * ----------------------------------------------------------------------------
+**/
+
+/**
+ * 1 - Analytics Dashboard
+ * ----------------------------------------------------------------------------
+**/
+
+/* Attached Charts */
+.view-google-analytics-reports-summary .attachment-before {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.view-google-analytics-reports-summary .view-display-id-attachment_1,
+.view-google-analytics-reports-summary .view-display-id-attachment_2 {
+	width: 100%;
+	clear: both;
+}
+
+.view-google-analytics-reports-summary .view-display-id-attachment_4,
+.view-google-analytics-reports-summary .view-display-id-attachment_5,
+.view-google-analytics-reports-summary .view-display-id-attachment_6 {
+	width: 33%;
+	overflow: hidden;
+}
+
+/* Adminimal overrides */
+.page-admin-reports-google-analytics-reports #content-wrapper,
+.page-admin-reports-google-analytics-reports #main-content {
+	display: block;
+}
+
+
+/* Filters */
+.view-google-analytics-reports-summary .views-exposed-form .views-exposed-widget {
+	width: 100%;
+	padding: 0;
+	float: none;
+}
+
+.view-google-analytics-reports-summary .form-radios {
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-wrap: wrap;
+	    flex-wrap: wrap;
+	-ms-flex-pack: start;
+	    justify-content: flex-start;
+}
+
+.view-google-analytics-reports-summary .form-radios .form-item {
+	position: relative;
+	flex-grow: 1;
+	text-align: center;
+}
+
+.view-google-analytics-reports-summary .form-radios .form-radio {
+	opacity: 0;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	display: block;
+	cursor: pointer;
+	-webkit-appearance: none;
+	   -moz-appearance: none;
+	        appearance: none;
+}
+
+.view-google-analytics-reports-summary .form-radios .option {
+	border: 1px solid #ddd;
+	display: block; 
+	padding: 10px 15px;
+	font-weight: 300;
+	background: #eee;
+	cursor: pointer;
+	transition: .3s ease;
+}
+
+.view-google-analytics-reports-summary .form-radios .form-radio:hover + .option {
+	background: #fff;
+}
+
+.view-google-analytics-reports-summary .form-radios .form-radio:checked + .option {
+	background: #fff;
+	font-weight: 700;
+	font-size: 16px;
+	box-shadow: inset 0 -2px 0 0 #74a2ed;
+}
+
+.view-google-analytics-reports-summary .form-radios .form-item:not(:last-child) .option {
+	border-right: none;
+}
+
+.view-google-analytics-reports-summary #edit-start-date-1-wrapper > label,
+.view-google-analytics-reports-summary .form-radios .form-item:first-child {
+	display: none; 
+}
+
+.view-google-analytics-reports-summary .attachment-before .view-content {
+	margin: 30px -8%;
+}
+
+.view-google-analytics-reports-summary .view-content {
+	margin: 30px 0;
+}
+
+.view-google-analytics-reports-summary .charts-google > div > div > div > svg {
+	width: 100% !important;
+}
+
+
+/**
+ * 2 - Field UI
+ * ----------------------------------------------------------------------------
+**/
+
+div.image-widget-data {
+	float: none;
+	margin-top: 20px;
+}
+
+.file-resup-wrapper .drop {
+	border: 5px dashed #ccc;
+    height: 10em;
+}
+
+body.adminimal-theme div.image-preview {
+    float: left;
+    margin-right: 20px;
+    margin-top: 20px;
+}
+
+#block-lost-coast-brewery-front-beers div.contextual-links-wrapper {
+	background: #fff;
+}

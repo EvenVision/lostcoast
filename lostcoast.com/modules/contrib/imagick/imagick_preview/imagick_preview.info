@@ -1,0 +1,10 @@
+name = Imagick Preview
+description = Enables live preview images when editing effect settings
+core = 7.x
+package = Imagick
+
+; Information added by Drupal.org packaging script on 2020-03-23
+version = "7.x-1.4"
+core = "7.x"
+project = "imagick"
+datestamp = "1584984469"

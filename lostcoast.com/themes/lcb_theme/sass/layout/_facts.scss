@@ -1,0 +1,171 @@
+/* facts styles */
+
+.facts{
+  position:relative;
+  z-index: 4;
+  padding: 114px 0 20px;
+
+  @include media('screen', '<desktop') {
+    padding: 30px 0 40px;
+  }
+
+  &:after{
+    content:"";
+    position: absolute;
+    top: -60px;
+    left: 0;
+    right: 0;
+    bottom: -60px;
+    background: url(../images/bg-white.png) repeat-x 0 0 / auto 100%;
+    z-index: -1;
+
+    @include media('retina2x') {
+      background-image: url(../images/bg-white-2x.png);
+    }
+  }
+
+  .category-img{
+    position: absolute;
+    bottom: calc(100% + -38px);
+    left: 0;
+    z-index: 1;
+
+    @include media('screen', '<widescreen') {
+      width: 250px;
+      height: auto;
+    }
+
+    @include media('screen', '<desktop') {
+      width: 200px;
+      bottom: calc(100% + -15px);
+    }
+
+    @include media('screen', '<tablet') {
+      width: 80px;
+      bottom: calc(100% + -65px);
+      display: none;
+    }
+  }
+}
+
+.fact-boxes{
+  color:#0e8d95;
+  @extend %flexbox;
+  @include justify-content(space-between);
+  position: relative;
+  z-index: 2;
+
+  @include media('screen', '<tablet') {
+    @include flex-wrap(wrap);
+  }
+
+  .box{
+    text-align:center;
+    position: relative;
+    white-space: nowrap;
+
+    @include media('screen', '<tablet') {
+      width: 100%;
+
+      &:not(:last-child){
+        margin: 0 0 20px;
+      }
+    }
+  }
+
+  .line{
+    display:block;
+  }
+
+  h2{
+    font:74px/1.1 'Interstate-BlackCondensed', Arial, Helvetica, sans-serif;
+    text-transform:uppercase;
+    margin:0;
+    letter-spacing:-3px;
+    opacity: .85;
+
+    @include media('screen', '<desktop') {
+      font-size: 40px;
+    }
+  }
+
+  small{
+    color:currentColor;
+    font-size:33px;
+    letter-spacing:-1px;
+
+    @include media('screen', '<desktop') {
+      font-size: 20px;
+    }
+  }
+
+  .size-z{
+    font-size:27px;
+
+    @include media('screen', '<desktop') {
+      font-size: 17px;
+    }
+  }
+
+  .size-zz{
+    font-size:30px;
+
+    @include media('screen', '<desktop') {
+      font-size: 19px;
+    }
+  }
+
+  .size-zzz{
+    font-size:44px;
+
+    @include media('screen', '<desktop') {
+      font-size: 25px;
+    }
+  }
+
+  .size-zzzz{
+    font-size:46px;
+
+    @include media('screen', '<desktop') {
+      font-size: 27px;
+    }
+  }
+
+  .style1{
+    margin: -20px 0 0;
+
+    @include media('screen', '<desktop') {
+      margin: 0;
+    }
+
+    .line{
+      &:first-child{
+        margin: 0 0 -7px;
+      }
+
+      &:last-child{
+        margin: -5px 0 0;
+      }
+
+      span{
+        @include inline-block(top);
+      }
+    }
+  }
+
+  .visual{
+    float: right;
+    margin: -14px -41px 0 0;
+
+    @include media('screen', '<widescreen') {
+      margin: 0;
+    }
+
+    @include media('screen', '<desktop') {
+      @include inline-block(top);
+      float: none;
+      width: 170px;
+      height: auto;
+    }
+  }
+}
