@@ -269,11 +269,8 @@ function lcb_register_form($form,&$form_state){
       '#type' => 'markup',
       '#markup' => '
         <div class="text-holder">
-        <p>Tours are Friday, Saturday and Sunday at 4pm.</p>
-        <p>Tours are limited to 15 people.</p>
-        <p>Please call 707-267-9651</p>
-        <p>Mon. - Fri. to schedule a tour.</p>
-        <p>Thank you.</p>
+        <p>Tours are currently not available right now.</p>
+        <p>Check back later or call (707) 445-4484.</p>
         </div>'
     );
   else:

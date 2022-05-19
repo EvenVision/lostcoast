@@ -147,7 +147,7 @@ function timefield_field_instance_settings_form($field, $instance) {
   $form['disable_plugin'] = array(
     '#title' => t('Disable jQuery Timepicker plugin.'),
     '#type' => 'checkbox',
-    '#default_value' => isset($settings['disable_plugin']) ? $settings['disable_plugin'] : (empty($library) ? TRUE : FALSE),
+    '#default_value' => isset($settings['disable_plugin']) ? $settings['disable_plugin'] : empty($library) ? TRUE : FALSE,
     '#description' => t('Do not use jQuery Timepicker plugin for input.'),
     '#disabled' => (empty($library)),
   );

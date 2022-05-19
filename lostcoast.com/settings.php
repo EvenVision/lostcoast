@@ -215,9 +215,9 @@ $databases = array (
   array (
     'default' => 
     array (
-      'database' => 'lcb2021',
-      'username' => 'lcb2021',
-      'password' => '5YrAk5mw2rDVx8s5',
+      'database' => 'lostcoast2019',
+      'username' => 'lostcoast2019',
+      'password' => '414c60c49a7b82b899dd7248',
       'host' => 'localhost',
       'port' => '',
       'driver' => 'mysql',
